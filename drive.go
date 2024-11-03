@@ -122,3 +122,28 @@ func stopCopyHandler(w http.ResponseWriter, r *http.Request) {
 	os.Remove(pidFilePath)
 	fmt.Fprintln(w, "Copy process stopped")
 }
+
+// CheckStatus checks if the copy process is still running
+func statusHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := os.ReadFile(pidFilePath)
+	if err != nil {
+		http.Error(w, "Copy process not running", http.StatusNotFound)
+		return
+	}
+
+	pid, err := strconv.Atoi(string(data))
+	if err != nil {
+		http.Error(w, "Invalid PID file", http.StatusInternalServerError)
+		return
+	}
+
+	process, err := os.FindProcess(pid)
+	if err != nil {
+		http.Error(w, "Process not found", http.StatusNotFound)
+		return
+	} else {
+
+		fmt.Fprintln(w, "Copy is in process on"+strconv.Itoa(process.Pid))
+	}
+
+}
