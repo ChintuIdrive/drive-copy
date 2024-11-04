@@ -21,6 +21,7 @@ func main() {
 	http.HandleFunc("/api/start", startCopyHandler)
 	http.HandleFunc("/api/progress", getProgressHandler)
 	http.HandleFunc("/api/stop", stopCopyHandler)
+	http.HandleFunc("/api/status", statusHandler)
 
 	fmt.Println("Starting server on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
